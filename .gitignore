@@ -1,0 +1,22 @@
+#Android generated
+.apt_generated/
+bin/
+gen/
+
+#Eclipse
+.metadata/
+
+#IntelliJ IDEA
+.idea
+*.iml
+*.ipl
+classes
+
+#Maven
+target
+release.properties
+pom.xml.*
+[Tt]humbs.db
+
+/ListViewItemAnimations
+ListViewItemAnimations/*
