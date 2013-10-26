@@ -36,15 +36,15 @@ import rpc.json.me.*;
 
 
 /**
-* Generated class for your User data model 
+* Generated class for your Person data model 
 */
-public class User extends AbstractClientDataModel
+public class Person extends AbstractClientDataModel
 {
     private List<Experience> experiences = new ArrayList<Experience>();
     /**
     * Default constructor. Needed for internal processing.
     */
-    public User ( )
+    public Person ( )
     {
         super( );
     }
@@ -54,7 +54,7 @@ public class User extends AbstractClientDataModel
     */
     public String getSimpleName( )
     {
-        return "User";
+        return "Person";
     }
 
     /**
@@ -78,10 +78,10 @@ public class User extends AbstractClientDataModel
     * Returns a list of objects of this class filtered by the given query from server
     * @query a query filtering the results in SQL style (@see <a href="http://doc.apiomat.com">documentation</a>)
     */
-    public static final List<User> getUsers( String query ) throws ApiomatRequestException
+    public static final List<Person> getPersons( String query ) throws ApiomatRequestException
     {
-        User o = new User();
-        return Datastore.getInstance( ).loadFromServer( User.class, o.getModuleName( ),
+        Person o = new Person();
+        return Datastore.getInstance( ).loadFromServer( Person.class, o.getModuleName( ),
             o.getSimpleName( ), query );
     }
     
@@ -92,9 +92,9 @@ public class User extends AbstractClientDataModel
      * @param query a query filtering the results in SQL style (@see <a href="http://doc.apiomat.com">documentation</a>)
      * @param listAOMCallback The callback method which will called when request is finished
      */
-    public static void getUsersAsync(final String query, final AOMCallback<List<User>> listAOMCallback) 
+    public static void getPersonsAsync(final String query, final AOMCallback<List<Person>> listAOMCallback) 
     {
-       getUsersAsync(query, false, listAOMCallback);
+       getPersonsAsync(query, false, listAOMCallback);
     }
     
     /**
@@ -103,10 +103,10 @@ public class User extends AbstractClientDataModel
     * @query a query filtering the results in SQL style (@see <a href="http://doc.apiomat.com">documentation</a>)
     * @param withReferencedHrefs set to true to get also all HREFs of referenced models
     */
-    public static final List<User> getUsers( String query, boolean withReferencedHrefs ) throws Exception
+    public static final List<Person> getPersons( String query, boolean withReferencedHrefs ) throws Exception
     {
-        User o = new User();
-        return Datastore.getInstance( ).loadFromServer( User.class, o.getModuleName( ),
+        Person o = new Person();
+        return Datastore.getInstance( ).loadFromServer( Person.class, o.getModuleName( ),
             o.getSimpleName( ), withReferencedHrefs, query);
     }
     
@@ -118,22 +118,12 @@ public class User extends AbstractClientDataModel
      * @param withReferencedHrefs set true to get also all HREFs of referenced models
      * @param listAOMCallback The callback method which will called when request is finished
      */
-    public static void getUsersAsync(final String query, final boolean withReferencedHrefs, final AOMCallback<List<User>> listAOMCallback) 
+    public static void getPersonsAsync(final String query, final boolean withReferencedHrefs, final AOMCallback<List<Person>> listAOMCallback) 
     {
-         User o = new  User();
-        Datastore.getInstance().loadFromServerAsync(User.class,o.getModuleName(), o.getSimpleName(), withReferencedHrefs, query, listAOMCallback);
+         Person o = new  Person();
+        Datastore.getInstance().loadFromServerAsync(Person.class,o.getModuleName(), o.getSimpleName(), withReferencedHrefs, query, listAOMCallback);
     }
 
-    public String getName()
-    {
-         return this.data.optString( "name" );
-    }
-
-    public void setName( String arg )
-    {
-        String name = arg;
-        this.data.put( "name", name );
-    }
     public List<Experience> loadExperiences( String query ) throws Exception
     {
         final String refUrl = this.data.optString( "experiencesHref" );
@@ -323,4 +313,14 @@ public class User extends AbstractClientDataModel
         }
     }
 
+    public String getName()
+    {
+         return this.data.optString( "name" );
+    }
+
+    public void setName( String arg )
+    {
+        String name = arg;
+        this.data.put( "name", name );
+    }
 }

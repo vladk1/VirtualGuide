@@ -127,6 +127,150 @@ public class POI extends AbstractClientDataModel
     * Returns the URL of the resource.
     * @return the URL of the resource
     */
+    public String getGifURL()
+    {
+        if(this.data.isNull( "gifURL" ))
+        {
+            return null;
+        }
+        return this.data.optString( "gifURL" ) + ".img?apiKey=" 
+            + User.apiKey + "&system=" + this.getSystem();
+    }
+
+    public String postGif( byte[] data ) throws Exception
+    {
+        String href = null;
+        if(Datastore.getInstance().sendOffline("POST"))
+        {
+            final String sendHREF = Datastore.getInstance().createStaticDataHref(true);
+            href = Datastore.getInstance().getOfflineHandler().addTask("POST", sendHREF, data);
+        }
+        else
+        {
+            href = Datastore.getInstance( ).postStaticDataOnServer( data, false);
+        }
+        
+        if(href != null && href.length() > 0)
+        {
+            this.data.put( "gifURL", href );
+            this.save();
+        }
+        return href;
+    }
+    
+    public void postGifAsync( final byte[] data, final AOMEmptyCallback _callback )
+    {
+        AOMCallback<String> cb = new AOMCallback<String>() {
+            @Override
+            public void isDone(String href, ApiomatRequestException ex) {
+                if(ex == null && href!=null && href.length()>0)
+                {
+                    POI.this.data.put( "gifURL", href );
+                    /* save new image reference in model */
+                    POI.this.saveAsync(new AOMEmptyCallback() {
+                        @Override
+                        public void isDone(ApiomatRequestException exception) {
+                            if(_callback != null)
+                            {
+                                _callback.isDone(exception);
+                            }
+                            else
+                            {
+                                System.err.println("Exception was thrown: " + exception.getMessage());
+                            }
+                        }
+                    });
+                }
+                else
+                {
+                    if(_callback != null && ex != null)
+                    {
+                        _callback.isDone(ex);
+                    }
+                    else if(_callback != null && ex == null)
+                    {
+                        _callback.isDone(new ApiomatRequestException(Status.HREF_NOT_FOUND));
+                    }
+                    else
+                    {
+                        System.err.println("Exception was thrown: " + (ex != null?ex.getMessage(): Status.HREF_NOT_FOUND.toString()));
+                    }
+                }
+            }
+        };
+        
+        if(Datastore.getInstance().sendOffline("POST"))
+        {
+            final String sendHREF = Datastore.getInstance().createStaticDataHref(true);
+            String refHref = Datastore.getInstance().getOfflineHandler().addTask("POST", sendHREF, data);
+            cb.isDone(refHref, null);
+        }
+        else
+        {
+            Datastore.getInstance( ).postStaticDataOnServerAsync( data, true, cb);
+        }
+    }
+    
+    public void deleteGif() throws Exception
+    {
+        final String imageURL = this.data.optString( "gifURL" );
+	this.data.remove( "gifURL" );
+        if(Datastore.getInstance().sendOffline("DELETE"))
+        {
+            Datastore.getInstance().getOfflineHandler().addTask("DELETE", imageURL);
+            this.save();
+        }
+        else
+        {
+            Datastore.getInstance( ).deleteOnServer(imageURL);
+            this.save();
+        }
+    }
+    
+    public void deleteGifAsync(final AOMEmptyCallback _callback)
+    {
+        AOMEmptyCallback cb = new AOMEmptyCallback() {
+            @Override
+            public void isDone(ApiomatRequestException ex)
+            {
+                if(ex == null )
+                {
+                    POI.this.data.remove( "gifURL" );
+                    /* save deleted image reference in model */
+                    POI.this.saveAsync(new AOMEmptyCallback() {
+                        @Override
+                        public void isDone(ApiomatRequestException exception) {
+                            if(_callback != null)
+                            {
+                                _callback.isDone(exception);
+                            }
+                            else
+                            {
+                                System.err.println("Exception was thrown: " + exception.getMessage());
+                            }
+                        }
+                    });
+                }
+                _callback.isDone(ex);
+            }
+        };
+        final String url = this.data.optString( "gifURL" );
+        if(Datastore.getInstance().sendOffline("DELETE"))
+        {
+            Datastore.getInstance().getOfflineHandler().addTask("DELETE", url);
+            cb.isDone(null);
+        }
+        else
+        {
+            Datastore.getInstance( ).deleteOnServerAsync( url, cb);
+        }
+    }
+
+
+    /**
+    * Returns the URL of the resource.
+    * @return the URL of the resource
+    */
     public String getImageURL()
     {
         if(this.data.isNull( "imageURL" ))
@@ -305,178 +449,6 @@ public class POI extends AbstractClientDataModel
         String name = arg;
         this.data.put( "name", name );
     }
-    /**
-    * Returns the URL of the resource.
-    * @return the URL of the resource
-    */
-    public String getGifURL()
-    {
-        if(this.data.isNull( "gifURL" ))
-        {
-            return null;
-        }
-        return this.data.optString( "gifURL" ) + ".img?apiKey=" 
-            + User.apiKey + "&system=" + this.getSystem();
-    }
-
-    public String postGif( byte[] data ) throws Exception
-    {
-        String href = null;
-        if(Datastore.getInstance().sendOffline("POST"))
-        {
-            final String sendHREF = Datastore.getInstance().createStaticDataHref(true);
-            href = Datastore.getInstance().getOfflineHandler().addTask("POST", sendHREF, data);
-        }
-        else
-        {
-            href = Datastore.getInstance( ).postStaticDataOnServer( data, true);
-        }
-        
-        if(href != null && href.length() > 0)
-        {
-            this.data.put( "gifURL", href );
-            this.save();
-        }
-        return href;
-    }
-    
-    public void postGifAsync( final byte[] data, final AOMEmptyCallback _callback )
-    {
-        AOMCallback<String> cb = new AOMCallback<String>() {
-            @Override
-            public void isDone(String href, ApiomatRequestException ex) {
-                if(ex == null && href!=null && href.length()>0)
-                {
-                    POI.this.data.put( "gifURL", href );
-                    /* save new image reference in model */
-                    POI.this.saveAsync(new AOMEmptyCallback() {
-                        @Override
-                        public void isDone(ApiomatRequestException exception) {
-                            if(_callback != null)
-                            {
-                                _callback.isDone(exception);
-                            }
-                            else
-                            {
-                                System.err.println("Exception was thrown: " + exception.getMessage());
-                            }
-                        }
-                    });
-                }
-                else
-                {
-                    if(_callback != null && ex != null)
-                    {
-                        _callback.isDone(ex);
-                    }
-                    else if(_callback != null && ex == null)
-                    {
-                        _callback.isDone(new ApiomatRequestException(Status.HREF_NOT_FOUND));
-                    }
-                    else
-                    {
-                        System.err.println("Exception was thrown: " + (ex != null?ex.getMessage(): Status.HREF_NOT_FOUND.toString()));
-                    }
-                }
-            }
-        };
-        
-        if(Datastore.getInstance().sendOffline("POST"))
-        {
-            final String sendHREF = Datastore.getInstance().createStaticDataHref(true);
-            String refHref = Datastore.getInstance().getOfflineHandler().addTask("POST", sendHREF, data);
-            cb.isDone(refHref, null);
-        }
-        else
-        {
-            Datastore.getInstance( ).postStaticDataOnServerAsync( data, true, cb);
-        }
-    }
-    
-    public void deleteGif() throws Exception
-    {
-        final String imageURL = this.data.optString( "gifURL" );
-	this.data.remove( "gifURL" );
-        if(Datastore.getInstance().sendOffline("DELETE"))
-        {
-            Datastore.getInstance().getOfflineHandler().addTask("DELETE", imageURL);
-            this.save();
-        }
-        else
-        {
-            Datastore.getInstance( ).deleteOnServer(imageURL);
-            this.save();
-        }
-    }
-    
-    public void deleteGifAsync(final AOMEmptyCallback _callback)
-    {
-        AOMEmptyCallback cb = new AOMEmptyCallback() {
-            @Override
-            public void isDone(ApiomatRequestException ex)
-            {
-                if(ex == null )
-                {
-                    POI.this.data.remove( "gifURL" );
-                    /* save deleted image reference in model */
-                    POI.this.saveAsync(new AOMEmptyCallback() {
-                        @Override
-                        public void isDone(ApiomatRequestException exception) {
-                            if(_callback != null)
-                            {
-                                _callback.isDone(exception);
-                            }
-                            else
-                            {
-                                System.err.println("Exception was thrown: " + exception.getMessage());
-                            }
-                        }
-                    });
-                }
-                _callback.isDone(ex);
-            }
-        };
-        final String url = this.data.optString( "gifURL" );
-        if(Datastore.getInstance().sendOffline("DELETE"))
-        {
-            Datastore.getInstance().getOfflineHandler().addTask("DELETE", url);
-            cb.isDone(null);
-        }
-        else
-        {
-            Datastore.getInstance( ).deleteOnServerAsync( url, cb);
-        }
-    }
-
-    /**
-    * Returns an URL of the image. <br/>
-    * You can provide several parameters to manipulate the image:
-    * @param width the width of the image, 0 to use the original size. If only width or height are provided, 
-    *        the other value is computed.
-    * @param height the height of the image, 0 to use the original size. If only width or height are provided, 
-    *        the other value is computed.
-    * @param backgroundColorAsHex the background color of the image, null or empty uses the original background color. Caution: Don't send the '#' symbol!
-    *        Example: <i>ff0000</i>
-    * @param alpha the alpha value of the image, null to take the original value.
-    * @param format the file format of the image to return, e.g. <i>jpg</i> or <i>png</i>
-    * @return the URL of the image
-    */
-    public String getGifURL(int width, int height, String backgroundColorAsHex, 
-        Double alpha, String format)
-    {
-        String parameters =  ".img?apiKey=" + User.apiKey + "&system=" + this.getSystem();
-        parameters += "&width=" + width + "&height=" + height;
-        if(backgroundColorAsHex != null) 
-        {
-            parameters += "&bgcolor=" + backgroundColorAsHex;
-        }
-        if(alpha != null)
-            parameters += "&alpha=" + alpha;
-        if(format != null)
-            parameters += "&format=" + format;
-        return this.data.optString( "gifURL" ) + parameters;
-    }
-
     public double getLocationLatitude( )
     {
          final JSONArray loc = this.data.optJSONArray( "location" );
