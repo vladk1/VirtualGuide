@@ -449,6 +449,16 @@ public class POI extends AbstractClientDataModel
         String name = arg;
         this.data.put( "name", name );
     }
+    public String getDescription()
+    {
+         return this.data.optString( "description" );
+    }
+
+    public void setDescription( String arg )
+    {
+        String description = arg;
+        this.data.put( "description", description );
+    }
     public double getLocationLatitude( )
     {
          final JSONArray loc = this.data.optJSONArray( "location" );
