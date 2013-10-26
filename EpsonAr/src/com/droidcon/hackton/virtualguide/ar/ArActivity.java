@@ -15,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,6 +25,7 @@ import com.apiomat.frontend.virtualguidemain.POI;
 import com.droidcon.hackton.virtualguide.R;
 import com.droidcon.hackton.virtualguide.util.DistanceFormatter;
 import com.droidcon.hackton.virtualguide.util.LocationProvider;
+import com.squareup.picasso.Picasso;
 
 public class ArActivity extends Activity {
 
@@ -46,6 +48,7 @@ public class ArActivity extends Activity {
 							serverPoi.getLocationLatitude(),
 							serverPoi.getLocationLongitude()));
 					p.setName(serverPoi.getName());
+					p.setImageUrl(serverPoi.getImageURL());
 					poiAdapter.add(p);
 				}
 				poiAdapter.notifyDataSetChanged();
@@ -98,15 +101,23 @@ public class ArActivity extends Activity {
 						false);
 			}
 
+			Poi poi = getItem(position);
+
 			((TextView) convertView.findViewById(R.id.distance))
 					.setText(DistanceFormatter
-							.convertDistanceToUserFriendlyString(getItem(
-									position).getDistance()));
+							.convertDistanceToUserFriendlyString(poi
+									.getDistance()));
+
+			Picasso.with(getContext()).load(poi.getImageUrl()).resize(64, 64)
+					.centerInside()
+					.into(((ImageView) convertView.findViewById(R.id.image)));
 			return convertView;
 		}
 	}
 
 	private static class Poi extends PoiInfo {
+
+		private String imageUrl;
 
 		public Poi(Location location) {
 			super(location);
@@ -115,5 +126,14 @@ public class ArActivity extends Activity {
 		public Poi(Parcel in) {
 			super(in);
 		}
+
+		public String getImageUrl() {
+			return imageUrl;
+		}
+
+		public void setImageUrl(String imageUrl) {
+			this.imageUrl = imageUrl;
+		}
+
 	}
 }
