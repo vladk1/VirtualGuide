@@ -1,5 +1,7 @@
 package com.droidcon.hackton.virtualguide.ar;
 
+import java.util.List;
+
 import pl.speednet.ar.data.PoiInfo;
 import pl.speednet.ar.util.ArArrayAdapter;
 import pl.speednet.ar.view.ArView;
@@ -16,6 +18,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.apiomat.frontend.ApiomatRequestException;
+import com.apiomat.frontend.callbacks.AOMCallback;
 import com.apiomat.frontend.virtualguidemain.POI;
 import com.droidcon.hackton.virtualguide.R;
 import com.droidcon.hackton.virtualguide.util.DistanceFormatter;
@@ -31,7 +35,22 @@ public class ArActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_ar);
-		
+		POI.getPOIsAsync("", new AOMCallback<List<POI>>() {
+
+			@Override
+			public void isDone(List<POI> resultObject,
+					ApiomatRequestException exception) {
+				poiAdapter.clear();
+				for (POI serverPoi : resultObject) {
+					Poi p = new Poi(LocationProvider.generateLocation(
+							serverPoi.getLocationLatitude(),
+							serverPoi.getLocationLongitude()));
+					p.setName(serverPoi.getName());
+					poiAdapter.add(p);
+				}
+				poiAdapter.notifyDataSetChanged();
+			}
+		});
 
 		poiAdapter = new PoiAdapter(this);
 		locationProvider = new LocationProvider();
@@ -70,21 +89,6 @@ public class ArActivity extends Activity {
 		public PoiAdapter(Context context) {
 			super(context);
 			inflater = LayoutInflater.from(context);
-			add(makePoi(
-					LocationProvider.generateLocation(51.518276, -0.121995),
-					"3 Southampton Place, WC1"));
-			add(makePoi(
-					LocationProvider.generateLocation(51.518436, -0.122886),
-					"Bloomsbury Square west, WC1"));
-			add(makePoi(
-					LocationProvider.generateLocation(51.519526, -0.122638),
-					"Bloomsbury Square east, WC1"));
-		}
-
-		private Poi makePoi(Location location, String name) {
-			Poi p = new Poi(location);
-			p.setName(name);
-			return p;
 		}
 
 		@Override
