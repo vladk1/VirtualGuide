@@ -1,9 +1,5 @@
 package com.droidcon.hackton.virtualguide.ar;
 
-import com.droidcon.hackton.epsonar.R;
-import com.droidcon.hackton.virtualguide.util.DistanceFormatter;
-import com.droidcon.hackton.virtualguide.util.LocationProvider;
-
 import pl.speednet.ar.data.PoiInfo;
 import pl.speednet.ar.util.ArArrayAdapter;
 import pl.speednet.ar.view.ArView;
@@ -19,6 +15,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.droidcon.hackton.virtualguide.R;
+import com.droidcon.hackton.virtualguide.util.DistanceFormatter;
+import com.droidcon.hackton.virtualguide.util.LocationProvider;
 
 public class ArActivity extends Activity {
 
