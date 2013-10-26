@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.apiomat.frontend.virtualguidemain.POI;
 import com.droidcon.hackton.virtualguide.R;
 import com.droidcon.hackton.virtualguide.util.DistanceFormatter;
 import com.droidcon.hackton.virtualguide.util.LocationProvider;
@@ -30,6 +31,7 @@ public class ArActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_ar);
+		
 
 		poiAdapter = new PoiAdapter(this);
 		locationProvider = new LocationProvider();
