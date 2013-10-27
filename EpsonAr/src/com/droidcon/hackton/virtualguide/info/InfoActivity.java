@@ -30,8 +30,10 @@ public class InfoActivity extends Activity {
 				for (POI serverPoi : resultObject) {
 					Log.i("InfoActivity", serverPoi.getGifURL());
 					GIFView gifView = (GIFView) findViewById(R.id.gif_view);
-					TextView text = (TextView) findViewById(R.id.info);
-					text.setText(serverPoi.getDescription());
+					TextView info = (TextView) findViewById(R.id.info);
+					TextView tittle = (TextView) findViewById(R.id.tittle);
+					info.setText(serverPoi.getDescription());
+					tittle.setText(serverPoi.getName());
 					gifView.initializeView(serverPoi);
 				}
 			}
