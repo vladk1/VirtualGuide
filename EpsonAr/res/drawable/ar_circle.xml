@@ -8,5 +8,15 @@
             <solid android:color="@color/accent" />
         </shape>
     </item>
+    <item
+        android:bottom="2dp"
+        android:left="2dp"
+        android:right="2dp"
+        android:top="2dp">
+        <shape android:shape="rectangle" >
+            <corners android:radius="300dp" />
+            <solid android:color="@android:color/black" />
+        </shape>
+    </item>
 
 </layer-list>

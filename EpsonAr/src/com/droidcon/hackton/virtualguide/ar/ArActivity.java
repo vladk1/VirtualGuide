@@ -9,16 +9,17 @@ import pl.speednet.ar.view.ArView.OnPoiClickListener;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Parcel;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.apiomat.frontend.ApiomatRequestException;
 import com.apiomat.frontend.callbacks.AOMCallback;
@@ -50,6 +51,14 @@ public class ArActivity extends Activity {
 							serverPoi.getLocationLatitude(),
 							serverPoi.getLocationLongitude()));
 					p.setName(serverPoi.getName());
+
+					Resources r = getResources();
+					p.setOffsetLeft((int) TypedValue.applyDimension(
+							TypedValue.COMPLEX_UNIT_DIP, 32,
+							r.getDisplayMetrics()));
+					p.setOffsetTop((int) TypedValue.applyDimension(
+							TypedValue.COMPLEX_UNIT_DIP, 80,
+							r.getDisplayMetrics()));
 					p.setImageUrl(serverPoi.getImageURL());
 					poiAdapter.add(p);
 				}
@@ -68,7 +77,7 @@ public class ArActivity extends Activity {
 			@Override
 			public void onClick(View v, MotionEvent event, PoiInfo info) {
 				Poi poi = (Poi) info;
-				
+
 				Intent intent = new Intent(ArActivity.this, InfoActivity.class);
 				intent.putExtra("POI", poi.getName());
 				startActivity(intent);
