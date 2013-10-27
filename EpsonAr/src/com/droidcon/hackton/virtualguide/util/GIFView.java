@@ -1,5 +1,6 @@
 package com.droidcon.hackton.virtualguide.util;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
@@ -12,6 +13,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Movie;
 import android.os.AsyncTask;
+import android.os.SystemClock;
 import android.util.AttributeSet;
 import android.view.View;
 
@@ -35,21 +37,23 @@ public class GIFView extends View {
 	public void initializeView(POI poi) {
 		try {
 			final URL url = new URL(poi.getGifURL());
-			new AsyncTask<Void, InputStream, InputStream>() {
+			new AsyncTask<Void, InputStream, Movie>() {
 				 
-	            protected InputStream doInBackground(Void... params) {
-	            	InputStream is = null;
+	            protected Movie doInBackground(Void... params) {
+	            	Movie movie = null;
 	            	try {
-						is = url.openConnection().getInputStream();
+						InputStream is = url.openConnection().getInputStream();
+						byte[] array = streamToBytes(is);
+						movie = Movie.decodeByteArray(array, 0, array.length);
 					} catch (IOException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
-	            	return is;
+	            	return movie;
 	            }
 	             
-	            protected void onPostExecute(InputStream is) {
-	            	mMovie = Movie.decodeStream(is);
+	            protected void onPostExecute(Movie movie) {
+	            	mMovie = movie;
 	            };
 	             
 	        }.execute();
@@ -61,7 +65,20 @@ public class GIFView extends View {
 		}
 	}
 	
-	protected void onDraw(Canvas canvas) {
+	private static byte[] streamToBytes(InputStream is) {
+	    ByteArrayOutputStream os = new ByteArrayOutputStream(1024);
+	    byte[] buffer = new byte[1024];
+	    int len;
+	    try {
+	        while ((len = is.read(buffer)) >= 0) {
+	            os.write(buffer, 0, len);
+	        }
+	    } catch (java.io.IOException e) {
+	    }
+	    return os.toByteArray();
+	}
+	
+	/*protected void onDraw(Canvas canvas) {
 	    canvas.drawColor(Color.TRANSPARENT);
 	    super.onDraw(canvas);
 	    long now = android.os.SystemClock.uptimeMillis();
@@ -76,5 +93,24 @@ public class GIFView extends View {
 	                - mMovie.height());
 	        this.invalidate();
 	    }
-	}
+
+	}*/
+	    
+    protected void onDraw(Canvas canvas) {
+        canvas.drawColor(Color.TRANSPARENT);
+        super.onDraw(canvas);
+        final long now = SystemClock.uptimeMillis();
+
+        if (movieStart == 0) {
+        	movieStart = now;
+        }
+
+	    if (mMovie != null) {
+	        final int relTime = (int)((now - movieStart) % mMovie.duration());
+	        mMovie.setTime(relTime);
+	        mMovie.draw(canvas, 10, 10);
+	    }
+	    
+        this.invalidate();
+    }
 }
