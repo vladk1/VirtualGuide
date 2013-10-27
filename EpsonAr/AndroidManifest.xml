@@ -13,7 +13,6 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    
 
     <application
         android:name="com.droidcon.hackton.virtualguide.App"
@@ -23,7 +22,8 @@
         android:theme="@style/AppTheme" >
         <activity
             android:name="com.droidcon.hackton.virtualguide.ar.ArActivity"
-            android:label="@string/app_name" >
+            android:label="@string/app_name"
+            android:screenOrientation="sensorLandscape" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -31,10 +31,11 @@
             </intent-filter>
         </activity>
         <activity android:name="com.droidcon.hackton.virtualguide.info.InfoActivity" />
-         <activity android:name="pl.speednet.modechange.view.MapView"
-             android:screenOrientation="landscape"
+        <activity
+            android:name="pl.speednet.modechange.view.MapView"
             android:configChanges="orientation"
-           ></activity>
+            android:screenOrientation="sensorLandscape" >
+        </activity>
     </application>
 
 </manifest>
