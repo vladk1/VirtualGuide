@@ -12,6 +12,7 @@ import android.graphics.Canvas;
 import android.graphics.Movie;
 import android.os.AsyncTask;
 import android.os.Build;
+import android.text.method.MovementMethod;
 import android.util.AttributeSet;
 import android.view.View;
 
@@ -242,18 +243,20 @@ public class GIFView extends View {
 	 */
 	private void updateAnimationTime() {
 		long now = android.os.SystemClock.uptimeMillis();
+		int movieDelayFactor = 3;
 
 		if (mMovieStart == 0) {
 			mMovieStart = now;
 		}
 
-		int dur = mMovie.duration();
+		int dur = mMovie.duration() * movieDelayFactor;
 
 		if (dur == 0) {
 			dur = DEFAULT_MOVIEW_DURATION;
 		}
 
 		mCurrentAnimationTime = (int) ((now - mMovieStart) % dur);
+		mCurrentAnimationTime /= movieDelayFactor;
 	}
 
 	/**
