@@ -9,6 +9,11 @@
         android:targetSdkVersion="18" />
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    
 
     <application
         android:name="com.droidcon.hackton.virtualguide.App"
@@ -26,6 +31,10 @@
             </intent-filter>
         </activity>
         <activity android:name="com.droidcon.hackton.virtualguide.info.InfoActivity" />
+         <activity android:name="pl.speednet.modechange.view.MapView"
+             android:screenOrientation="landscape"
+            android:configChanges="orientation"
+           ></activity>
     </application>
 
 </manifest>
