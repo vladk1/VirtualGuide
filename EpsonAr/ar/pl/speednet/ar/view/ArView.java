@@ -1,5 +1,6 @@
 package pl.speednet.ar.view;
 
+
 import pl.speednet.ar.data.PoiInfo;
 import pl.speednet.ar.util.ArArrayAdapter;
 import pl.speednet.ar.util.ArEngineHelper;
